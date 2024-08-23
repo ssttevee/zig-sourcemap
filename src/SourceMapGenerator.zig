@@ -6,8 +6,8 @@ const MappingSegment = @import("MappingSegment.zig");
 const SourceMapGenerator = @This();
 
 pub const Position = struct {
-    line: u31,
-    column: u31,
+    line: u32,
+    column: u64,
 };
 
 pub const Mapping = struct {
@@ -89,7 +89,7 @@ pub fn addMapping(self: *SourceMapGenerator, mapping: Mapping) !void {
     }
 
     var segment = MappingSegment{
-        .generated_column = mapping.generated.column,
+        .generated_column = @intCast(mapping.generated.column),
     };
 
     if (mapping.original) |original| {
@@ -101,10 +101,10 @@ pub fn addMapping(self: *SourceMapGenerator, mapping: Mapping) !void {
 
                 try self.sources.put(self.allocator, try self.allocator.dupe(u8, original.source), null);
 
-                break :blk self.sources.count();
+                break :blk self.sources.count() - 1;
             }),
-            .line = original.position.line,
-            .column = original.position.column,
+            .line = @intCast(original.position.line),
+            .column = @intCast(original.position.column),
             .name_index = blk: {
                 if (original.name) |name| {
                     if (self.names.getIndex(name)) |i| {
@@ -113,7 +113,7 @@ pub fn addMapping(self: *SourceMapGenerator, mapping: Mapping) !void {
 
                     try self.names.put(self.allocator, try self.allocator.dupe(u8, name), {});
 
-                    break :blk @intCast(self.names.count());
+                    break :blk @intCast(self.names.count() - 1);
                 }
 
                 break :blk null;
