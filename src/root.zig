@@ -7,6 +7,6 @@ test {
     _ = @import("SourceMapGenerator.zig");
 }
 
-const SourceMapGenerator = @import("SourceMapGenerator.zig");
-const Position = SourceMapGenerator.Position;
-const Mapping = SourceMapGenerator.Mapping;
+pub const Generator = @import("SourceMapGenerator.zig");
+pub const Position = Generator.Position;
+pub const Mapping = Generator.Mapping;
