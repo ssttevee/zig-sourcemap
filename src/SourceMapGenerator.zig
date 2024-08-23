@@ -205,6 +205,7 @@ pub fn jsonStringify(self: SourceMapGenerator, stream: anytype) !void {
     }
     try stream.endArray();
     try stream.objectField("mappings");
+    try stream.stream.writeByte(':');
     try stream.stream.writeByte('"');
     try self.writeMappingsString(stream.stream);
     stream.next_punctuation = .comma;
